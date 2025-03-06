@@ -10,6 +10,12 @@ services:
       POSTGRES_PASSWORD: mypass
     volumes:
       - timescale_data:/var/lib/postgresql/data
+    shm_size: "2g"  # Increase shared memory to 2GB
+    deploy:
+      resources:
+        limits:
+          memory: "6g"  # Allocate 6GB memory
+          cpus: "4.0"   # Allocate 4 CPU cores
 
 volumes:
   timescale_data:

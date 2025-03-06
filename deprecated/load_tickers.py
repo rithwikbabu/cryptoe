@@ -9,7 +9,7 @@ from psycopg2.extras import execute_values
 def fetch_tickers(api_key: str, market: str = 'crypto') -> list[Ticker]:
     """Fetch tickers data for the given market from Polygon."""
     client = RESTClient(api_key=api_key)
-    return list(client.list_tickers(market=market))
+    return list(client.list_tickers(market=market)) + list(client.list_tickers(market=market, active=False))
 
 
 def insert_conditions(values: list[tuple], conn_string: str) -> None:
@@ -33,11 +33,14 @@ def main():
     # Fetch tickers and prepare values for insertion
     tickers: list[Ticker] = fetch_tickers(polygon_api_key)
 
-    values = [
-        (ti.ticker, ti.name, ti.market, ti.locale, ti.active, ti.currency_symbol, ti.currency_name,
+    print(len(tickers))
+
+    values = list({
+        (f"{ti.ticker.split(':')[0]}:{ti.base_currency_symbol}-{ti.currency_symbol}",
+         ti.name, ti.market, ti.locale, ti.active, ti.currency_symbol, ti.currency_name,
          ti.base_currency_symbol, ti.base_currency_name, ti.last_updated_utc)
         for ti in tickers
-    ]
+    })
 
     # Define your PostgreSQL connection string
     conn_string = "dbname=postgres user=postgres password=mypass host=localhost"
