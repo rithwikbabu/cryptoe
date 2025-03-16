@@ -1,3 +1,9 @@
+.git/
+.idea/
+.profile/
+.vscode/
+.helix/
+
 /target
 
 service_account.json

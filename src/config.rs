@@ -2,6 +2,7 @@
 use dotenv::dotenv;
 use std::env;
 
+#[derive(Debug, Clone)]
 pub struct Config {
     pub input_prefix: String,
     pub output_prefix: String,
